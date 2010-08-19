@@ -1,0 +1,33 @@
+
+
+* Wordcount Mode
+
+This is a minor mode to provide a 'wc' function for Emacs buffers as
+well as a modeline addition with live word, line and character counts.
+
+Additionally, a user can set specific goals for adding or deleting
+words.  These goals were partly inspired by [[http://750words.com][750words.com]] where the
+goal of the site is to encourage writing by setting a goal of 750
+words at a time.  I wanted the same functionality in Emacs.
+
+* Installation
+
+  Obtain the package from Github
+  
+: git clone git://github.com/bnbeckwith/wc-mode.git
+
+  Then, add to your Emacs setup.
+
+: ;; Add the path to the repo
+: (add-to-list 'load-path "/path/to/wc-mode/")
+: (require 'wc-mode)
+: ;; Suggested setting
+: (global-set-key "\C-cw" 'wc-mode)
+
+  The code above sets up the minor mode and then assigns a global key
+  to toggle the mode on and off.
+
+
+
+
+
