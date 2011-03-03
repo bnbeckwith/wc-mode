@@ -22,6 +22,8 @@
 ;;
 ;;; Change Log:
 ;;
+;; 1.1 Counting functions tied to buffer-local variables
+;;     This allows customization of the counting methods
 ;; 1.0 Keystrokes for all goals added.
 ;;     Hooks variable added.
 ;;     In-code documentation updated.
@@ -98,21 +100,47 @@ like WC[742+360] in the modeline.
     (define-key map (kbd "C-c C-w l") 'wc-set-line-goal)
     (define-key map (kbd "C-c C-w a") 'wc-set-char-goal)
     (define-key map (kbd "C-c C-w c") 'wc-count)
-    (define-key map (kbd "C-c C-w q") 'wc-mode)
     map)
   "Keymap for wc-mode")
 
-(defvar wc-orig-words 0 "Original count of words in the buffer")
-(defvar wc-orig-lines 0 "Original count of words in the buffer")
-(defvar wc-orig-chars 0 "Original count of words in the buffer")
+(defvar wc-orig-words nil "Original count of words in the buffer")
+(defvar wc-orig-lines nil "Original count of words in the buffer")
+(defvar wc-orig-chars nil "Original count of words in the buffer")
+(make-variable-buffer-local 'wc-orig-words)
+(make-variable-buffer-local 'wc-orig-lines)
+(make-variable-buffer-local 'wc-orig-chars)
 
 (defvar wc-words-delta 0 "Change in word count")
 (defvar wc-lines-delta 0 "Change in line count")
 (defvar wc-chars-delta 0 "Change in char count")
+(make-variable-buffer-local 'wc-words-delta)
+(make-variable-buffer-local 'wc-lines-delta)
+(make-variable-buffer-local 'wc-chars-delta)
 
 (defvar wc-word-goal nil "Goal for number of words added")
 (defvar wc-line-goal nil "Goal for number of lines added")
 (defvar wc-char-goal nil "Goal for numger of chars added")
+(make-variable-buffer-local 'wc-word-goal)
+(make-variable-buffer-local 'wc-line-goal)
+(make-variable-buffer-local 'wc-char-goal)
+
+(defvar wc-count-chars-function
+  (function (lambda (rstart rend)
+    "Count the characters specified by the region bounded by
+RSTART and REND."
+    (- rend rstart))))
+
+(defvar wc-count-words-function
+  (function (lambda (rstart rend)
+    "Count the words specified by the region bounded by
+RSTART and REND."
+    (how-many "\\w+" rstart rend))))
+
+(defvar wc-count-lines-function
+  (function (lambda (rstart rend)
+    "Count the lines specified by the region bounded by
+RSTART and REND."
+    (how-many "\\n" rstart rend))))
 
 (defvar wc-modeline-format-alist
   '(("%W" . (number-to-string wc-orig-words))
@@ -130,6 +158,8 @@ like WC[742+360] in the modeline.
   "Format and value pair
 Format will be evaluated in `wc-generate-modeline'")
 
+(defvar wc-mode-hooks nil "Hooks to run upon entry to wc-mode")
+
 (defun wc-format-modeline-string (fmt)
   "Format the modeline string according to specification and return result"
   (let ((case-fold-search nil))
@@ -146,15 +176,6 @@ Also cheat here a bit and add nil-value processing."
 		  "-" "+")
 	      (abs val))
     "none"))
-
-(defun wc-set-local-variables (counts)
-  "Setup buffer-local variables with the initial line, word and char counts."
-  (set (make-local-variable 'wc-orig-lines) (nth 0 counts))
-  (set (make-local-variable 'wc-orig-words) (nth 1 counts))
-  (set (make-local-variable 'wc-orig-chars) (nth 2 counts))
-  (set (make-local-variable 'wc-words-delta) 0)
-  (set (make-local-variable 'wc-lines-delta) 0)
-  (set (make-local-variable 'wc-chars-delta) 0))
 
 (defun wc-set-word-goal (goal)
   "Set a goal for adding or removing words in the buffer"
@@ -192,11 +213,12 @@ Also cheat here a bit and add nil-value processing."
 
 
 (defun wc-count (&optional rstart rend field)
-  "Count the words present in the region following point.
-This function follows most of the rules present in the `how-many'
-function. If INTERACTIVE is omitted or nil, just return the word
-count, do not print it.  Otherwise, if INTERACTIVE is t, the
-function behaves according to interactive behavior.
+  "Count the words, lines and characters present in the region 
+following point. This function follows most of the rules present 
+in the `how-many' function. If INTERACTIVE is omitted or nil, 
+just return the word count, do not print it. Otherwise, if 
+INTERACTIVE is t, the function behaves according to interactive 
+behavior.
 
 START and END specify the region to operate on.
 
@@ -213,9 +235,9 @@ operate over the entire buffer.
 	      rend (region-end))
       (setq rstart (point-min)
 	    rend (point-max))))
-  (let ((wcount (how-many "\\w+" rstart rend))
-	(lcount (how-many "\\n" rstart rend))
-	(ccount (- rend rstart)))
+  (let ((wcount (funcall wc-count-words-function rstart rend))
+	(lcount (funcall wc-count-lines-function rstart rend))
+	(ccount (funcall wc-count-chars-function rstart rend)))
     (when (interactive-p) (message "%d line%s, %d word%s, %d char%s"
 				   lcount
 				   (if (= lcount 1) "" "s")
@@ -227,7 +249,6 @@ operate over the entire buffer.
     (if field
 	(nth field (list lcount wcount ccount))
       (list lcount wcount ccount))))
-
 
 (defalias 'wc 'wc-count
   "Alias function `wc-count' to the more legible `wc'.")
@@ -241,6 +262,9 @@ operate over the entire buffer.
 (defun wc-mode-update ()
   "Return a string to update the modeline appropriately"
   (let* ((stats (wc-count (point-min) (point-max))))
+    (unless wc-orig-lines (setq wc-orig-lines (nth 0 stats)))
+    (unless wc-orig-words (setq wc-orig-words (nth 1 stats)))
+    (unless wc-orig-chars (setq wc-orig-chars (nth 2 stats)))
     (setq wc-lines-delta (- (nth 0 stats) wc-orig-lines))
     (setq wc-words-delta (- (nth 1 stats) wc-orig-words))
     (setq wc-chars-delta (- (nth 2 stats) wc-orig-chars))
@@ -274,10 +298,9 @@ value is non-nil."
   :keymap wc-mode-map
   ;; The mode body code
   (if wc-mode
-      (progn
-	(wc-set-local-variables (wc-count (point-min) (point-max)))
-	(run-mode-hooks 'wc-mode-hooks))))
+	(run-mode-hooks 'wc-mode-hooks)))
 
 (provide 'wc-mode)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; wc-mode.el ends here
+
