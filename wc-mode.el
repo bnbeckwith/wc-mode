@@ -78,9 +78,10 @@ format are as follows.
   %tl Total lines in buffer
   %tc Total characters in buffer
 
-The default modeline, WC[%W%w], will display the orignial number
-of words followed by the change in words. It will looks something
-like WC[742+360] in the modeline.
+The default modeline, WC[%W%w/%tw], will display the original number
+of words followed by the change in words (delta), followed by the total
+number of words in the buffer. 
+It will looks something like WC[742+360/1100] in the modeline.
 "
   :group 'wc)
 
