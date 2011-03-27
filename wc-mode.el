@@ -180,19 +180,19 @@ Also cheat here a bit and add nil-value processing."
 
 (defun wc-set-word-goal (goal)
   "Set a goal for adding or removing words in the buffer"
-  (interactive "nHow many words:")
+  (interactive "nHow many words: ")
   (setq wc-word-goal goal)
   (message "Goal set at %d words" goal))
 
 (defun wc-set-line-goal (goal)
   "Set a goal for adding or removing lines in the buffer"
-  (interactive "nHow many lines:")
+  (interactive "nHow many lines: ")
   (setq wc-line-goal goal)
   (message "Goal set at %d lines" goal))
 
 (defun wc-set-char-goal (goal)
   "Set a goal for adding or removing chars in the buffer"
-  (interactive "nHow many characters:")
+  (interactive "nHow many characters: ")
   (setq wc-char-goal goal)
   (message "Goal set at %d characters" goal))
 
