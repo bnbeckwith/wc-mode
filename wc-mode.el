@@ -141,7 +141,7 @@ RSTART and REND."
   (function (lambda (rstart rend)
     "Count the lines specified by the region bounded by
 RSTART and REND."
-    (how-many "\\n" rstart rend))))
+    (how-many "\n" rstart rend))))
 
 (defvar wc-modeline-format-alist
   '(("%W" . (number-to-string wc-orig-words))
