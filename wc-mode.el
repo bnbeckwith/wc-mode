@@ -201,16 +201,16 @@ Also cheat here a bit and add nil-value processing."
   (or
    (if wc-line-goal
        (if (< wc-line-goal 0)
-	   (< wc-lines-delta wc-line-goal)
-	 (> wc-lines-delta wc-line-goal)))
+	   (<= wc-lines-delta wc-line-goal)
+	 (>= wc-lines-delta wc-line-goal)))
    (if wc-word-goal
        (if (< wc-word-goal 0)
-	   (< wc-words-delta wc-word-goal)
-	 (> wc-words-delta wc-word-goal)))
+	   (<= wc-words-delta wc-word-goal)
+	 (>= wc-words-delta wc-word-goal)))
    (if wc-char-goal
        (if (< wc-char-goal 0)
-	   (< wc-chars-delta wc-char-goal)
-	 (> wc-chars-delta wc-char-goal)))))
+	   (<= wc-chars-delta wc-char-goal)
+	 (>= wc-chars-delta wc-char-goal)))))
 
 
 (defun wc-count (&optional rstart rend field)
