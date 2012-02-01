@@ -1,4 +1,4 @@
-;;wc-mode --- Count number of words in a buffer
+;;; wc-mode --- Count number of words in a buffer
 ;;
 ;; Author: Benjamin Beckwith
 ;; Created: 2010-6-19
