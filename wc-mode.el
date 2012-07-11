@@ -1,10 +1,10 @@
-;;wc-mode --- Count number of words in a buffer
+;;; wc-mode.el --- Running word count with goals (minor mode)
 ;;
 ;; Author: Benjamin Beckwith
 ;; Created: 2010-6-19
-;; Version: 1.0
+;; Version: 1.1
 ;; Last-Updated: 2010-6-19
-;; URL:
+;; URL: https://github.com/bnbeckwith/wc-mode
 ;; Keywords: 
 ;; Compatability:
 ;;
