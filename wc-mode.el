@@ -178,6 +178,15 @@ Also cheat here a bit and add nil-value processing."
 	      (abs val))
     "none"))
 
+(defun wc-reset ()
+  "Reset the original word, line, and char count to their current
+value."
+  (interactive)
+  (setq wc-orig-words nil)
+  (setq wc-orig-lines nil)
+  (setq wc-orig-chars nil)
+  (wc-mode-update))
+
 (defun wc-set-word-goal (goal)
   "Set a goal for adding or removing words in the buffer"
   (interactive "nHow many words: ")
