@@ -2,7 +2,7 @@
 ;;
 ;; Author: Benjamin Beckwith
 ;; Created: 2010-6-19
-;; Version: 1.1
+;; Version: 1.2
 ;; Last-Updated: 2010-6-19
 ;; URL: https://github.com/bnbeckwith/wc-mode
 ;; Keywords: 
