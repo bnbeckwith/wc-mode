@@ -137,7 +137,9 @@ RSTART and REND."
   (function (lambda (rstart rend)
     "Count the words specified by the region bounded by
 RSTART and REND."
-    (how-many "\\w+" rstart rend))))
+    (if (boundp 'count-words)
+        (count-words rstart rend)
+      (how-many "\\w+" rstart rend)))))
 
 (defvar wc-count-lines-function
   (function (lambda (rstart rend)
