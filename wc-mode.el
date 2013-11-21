@@ -2,10 +2,10 @@
 ;;
 ;; Author: Benjamin Beckwith
 ;; Created: 2010-6-19
-;; Version: 1.2
+;; Version: 1.3
 ;; Last-Updated: 2010-6-19
 ;; URL: https://github.com/bnbeckwith/wc-mode
-;; Keywords: 
+;; Keywords:
 ;; Compatability:
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -22,6 +22,8 @@
 ;;
 ;;; Change Log:
 ;;
+;; 1.3 Goal functions now perform reset by default
+;; 1.2 Reset functions added
 ;; 1.1 Counting functions tied to buffer-local variables
 ;;     This allows customization of the counting methods
 ;; 1.0 Keystrokes for all goals added.
@@ -80,7 +82,7 @@ format are as follows.
 
 The default modeline, WC[%W%w/%tw], will display the original number
 of words followed by the change in words (delta), followed by the total
-number of words in the buffer. 
+number of words in the buffer.
 It will looks something like WC[742+360/1100] in the modeline.
 "
   :group 'wc)
@@ -95,7 +97,7 @@ It will looks something like WC[742+360/1100] in the modeline.
   "Face for modeline when goal is reached"
   :group 'wc)
 
-(defvar wc-mode-map 
+(defvar wc-mode-map
   (let ((map (make-sparse-keymap "Wordcount")))
     (define-key map (kbd "C-c C-w w") 'wc-set-word-goal)
     (define-key map (kbd "C-c C-w l") 'wc-set-line-goal)
@@ -191,18 +193,21 @@ value."
   "Set a goal for adding or removing words in the buffer"
   (interactive "nHow many words: ")
   (setq wc-word-goal goal)
+  (wc-reset)
   (message "Goal set at %d words" goal))
 
 (defun wc-set-line-goal (goal)
   "Set a goal for adding or removing lines in the buffer"
   (interactive "nHow many lines: ")
   (setq wc-line-goal goal)
+  (wc-reset)
   (message "Goal set at %d lines" goal))
 
 (defun wc-set-char-goal (goal)
   "Set a goal for adding or removing chars in the buffer"
   (interactive "nHow many characters: ")
   (setq wc-char-goal goal)
+  (wc-reset)
   (message "Goal set at %d characters" goal))
 
 (defun wc-goal-reached ()
@@ -223,11 +228,11 @@ value."
 
 
 (defun wc-count (&optional rstart rend field)
-  "Count the words, lines and characters present in the region 
-following point. This function follows most of the rules present 
-in the `how-many' function. If INTERACTIVE is omitted or nil, 
-just return the word count, do not print it. Otherwise, if 
-INTERACTIVE is t, the function behaves according to interactive 
+  "Count the words, lines and characters present in the region
+following point. This function follows most of the rules present
+in the `how-many' function. If INTERACTIVE is omitted or nil,
+just return the word count, do not print it. Otherwise, if
+INTERACTIVE is t, the function behaves according to interactive
 behavior.
 
 START and END specify the region to operate on.
