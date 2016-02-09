@@ -287,6 +287,7 @@ operate over the entire buffer.
     (setq wc-chars-delta (- (nth 2 stats) wc-orig-chars))
     (wc-generate-modeline)))
 
+;;;###autoload
 (define-minor-mode wc-mode
   "Toggle wc mode With no argument, this command toggles the
 mode.  Non-null prefix argument turns on the mode.  Null prefix
