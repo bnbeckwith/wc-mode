@@ -27,6 +27,10 @@
 ;;
 ;;; Change Log:
 ;;
+;; 1.4 Switch to lexical binding.
+;;     Add configurable timer, which, if set to a positive value
+;;     defers CPU intensive stat counting to idle periods.
+;;     Wc-mode now requires Emacs >= 24.1
 ;; 1.3 Goal functions now perform reset by default
 ;; 1.2 Reset functions added
 ;; 1.1 Counting functions tied to buffer-local variables
