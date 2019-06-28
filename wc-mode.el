@@ -1,11 +1,17 @@
 ;;; wc-mode.el --- Running word count with goals (minor mode) -*- lexical-binding: t -*-
+
+;; Copyright: 2010-2017  Benjamin Beckwith
+;;            2019  Nicholas D Steeves (willing to assign to FSF for GNU Emacs)
+
 ;; Author: Benjamin Beckwith
 ;; Created: 2010-6-19
 ;; Version: 1.3
-;; Last-Updated: 2016-10-31
+;; Last-Updated: 2019-06-28
 ;; URL: https://github.com/bnbeckwith/wc-mode
+;; Package-Requires: ((emacs "24.1"))
 ;; Keywords:
 ;; Compatability:
+;; License: GPL-3.0-or-later
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
