@@ -1,5 +1,4 @@
-;;; wc-mode.el --- Running word count with goals (minor mode)
-;;
+;;; wc-mode.el --- Running word count with goals (minor mode) -*- lexical-binding: t -*-
 ;; Author: Benjamin Beckwith
 ;; Created: 2010-6-19
 ;; Version: 1.3
@@ -92,6 +91,19 @@ It will looks something like WC[742+360/1100] in the modeline.
   :type 'hook
   :group 'wc)
 
+(defcustom wc-idle-wait 0
+  "This variable configures how many idle seconds wc-mode will
+wait before initiating wc-count.  0 and negative numbers provide
+a continuously updating word-count in the modeline.  Set this to
+a positive integer or float to defend against the lag and
+potential distraction of a continuously updating modeline.  A
+high value may enhance battery life, because large buffers will
+not be processed until one takes a break from work.
+
+Defaults to 0 for backwards compatibility."
+  :type 'number
+  :group 'wc)
+
 (defface wc-goal-face
   '((t (:inherit highlight)))
   "Face for modeline when goal is reached"
@@ -164,6 +176,18 @@ RSTART and REND."
 Format will be evaluated in `wc-generate-modeline'")
 
 (defvar wc-mode-hooks nil "Hooks to run upon entry to wc-mode")
+
+(defvar-local wc-timer-tracker nil
+  "Buffer-local timers for wc-count.  Each buffer where wc-mode
+is enabled has a timer, and this allows them to be found and
+cleaned up when their respective buffers are closed.
+
+TODO: word-count stats should not be generated for
+inactive/hidden buffers.")
+
+(defvar-local wc-buffer-stats nil
+  "This variable holds the per-buffer word-count statistics used to
+update the modeline.")
 
 (defun wc-format-modeline-string (fmt)
   "Format the modeline string according to specification and return result"
@@ -287,6 +311,17 @@ operate over the entire buffer.
     (setq wc-chars-delta (- (nth 2 stats) wc-orig-chars))
     (wc-generate-modeline)))
 
+(setq wc-timer-tracker
+      (run-with-idle-timer
+       wc-idle-wait t
+       '(lambda ()
+          (setq wc-buffer-stats (wc-mode-update)))))
+
+(add-hook 'kill-buffer-hook
+          (lambda ()
+            (when (timerp wc-timer-tracker)
+              (cancel-timer wc-timer-tracker))))
+
 ;;;###autoload
 (define-minor-mode wc-mode
   "Toggle wc mode With no argument, this command toggles the
@@ -309,7 +344,7 @@ value is non-nil."
   ;; initial value (off)
   :init-value nil
   ;; The indicator for the mode line
-  :lighter (:eval (wc-mode-update))
+  :lighter (:eval wc-buffer-stats)
   ;; The customization group
   :group 'wc
   ;; The local keymap to use
