@@ -10,7 +10,7 @@
 ;; URL: https://github.com/bnbeckwith/wc-mode
 ;; Package-Requires: ((emacs "24.1"))
 ;; Keywords:
-;; Compatability:
+;; Compatibility:
 ;; License: GPL-3.0-or-later
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -140,7 +140,7 @@ Defaults to 0 for backwards compatibility."
 
 (defvar wc-word-goal nil "Goal for number of words added")
 (defvar wc-line-goal nil "Goal for number of lines added")
-(defvar wc-char-goal nil "Goal for numger of chars added")
+(defvar wc-char-goal nil "Goal for number of chars added")
 (make-variable-buffer-local 'wc-word-goal)
 (make-variable-buffer-local 'wc-line-goal)
 (make-variable-buffer-local 'wc-char-goal)
@@ -362,4 +362,3 @@ value is non-nil."
 (provide 'wc-mode)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; wc-mode.el ends here
-
