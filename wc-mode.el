@@ -5,7 +5,7 @@
 
 ;; Author: Benjamin Beckwith
 ;; Created: 2010-6-19
-;; Version: 1.3
+;; Version: 1.4
 ;; Last-Updated: 2019-06-28
 ;; URL: https://github.com/bnbeckwith/wc-mode
 ;; Package-Requires: ((emacs "24.1"))
